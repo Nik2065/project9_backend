@@ -1,0 +1,14 @@
+/.vs/
+/DataAccess/bin/
+/DataAccess/obj/
+
+/Logic/bin/
+/Logic/obj/
+
+/Logic.Tests/bin/
+/Logic.Tests/obj/
+
+/Project9Api/bin/
+/Project9Api/obj/
+
+/Project9Api/.vs/

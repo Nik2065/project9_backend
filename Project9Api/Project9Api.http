@@ -1,0 +1,6 @@
+@Project9Api_HostAddress = http://localhost:5296
+
+GET {{Project9Api_HostAddress}}/default/
+Accept: application/json
+
+###
