@@ -22,5 +22,9 @@ namespace DataAccess.Entities
 
         [Column("site_role_id")]
         public int SiteRoleId { get; set; }
+
+        [Column("salt")]
+        public string Salt { get; set; }
+
     }
 }

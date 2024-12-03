@@ -104,8 +104,10 @@ namespace Project9Api.Controllers
             }
             catch (Exception ex)
             {
-
-
+                var m = "Ошибка получения токена ";
+                _logger.Error(m +": " + ex);
+                result.IsError = true;
+                result.Message = m;
             }
 
 

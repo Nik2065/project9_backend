@@ -9,11 +9,12 @@ namespace Logic
     {
         public UserLogic(DataAccess.DataContext db)
         { 
-        
             _db = db;
+            _logger = NLog.LogManager.GetCurrentClassLogger();
         }
 
-        DataAccess.DataContext _db;
+        private DataAccess.DataContext _db;
+        private NLog.Logger _logger;
 
         public void CreateNewSiteUser(string userEmail, string userPwd, SiteRoleEnum role)
         {
@@ -22,11 +23,12 @@ namespace Logic
             if (item != null)
                 throw new Exception("Пользователь с таким email уже зарегистирован");
 
-
+            var hr = CreateHashedPassword(userPwd);
             var u = new SiteUserDb
             {
                 EmailAsLogin = userEmail,
-                Password = HashPassword(userPwd),
+                Password = hr.Hash,
+                Salt = hr.Base64Salt,
                 Created = DateTime.Now,
                 SiteRoleId = (int)role
             };
@@ -36,11 +38,35 @@ namespace Logic
             _db.SaveChanges();
         }
 
-        public string HashPassword(string password)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="salt"></param>
+        /// <returns></returns>
+        internal string GetHashedPassword(string passwordAsText, string salt)
         {
+            var saltInBytes = Convert.FromBase64String(salt);
+
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: passwordAsText!,
+                salt: saltInBytes,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8));
+
+            return hashed;
+        }
+
+
+        internal HashResult CreateHashedPassword(string password)
+        {
+            var result = new HashResult();
             // Generate a 128-bit salt using a sequence of
             // cryptographically strong random bytes.
             byte[] salt = RandomNumberGenerator.GetBytes(128 / 8); // divide by 8 to convert bits to bytes
+            result.Base64Salt = Convert.ToBase64String(salt);
 
             // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
@@ -50,27 +76,50 @@ namespace Logic
                 iterationCount: 100000,
                 numBytesRequested: 256 / 8));
 
-            return hashed;
+            result.Hash = hashed;
+            return result;
         }
 
 
-        public ClaimsIdentity GetIdentity(string emailAsLogin, string password)
+        public ClaimsIdentity GetIdentity(string emailAsLogin, string passwordAsText)
         {
-            var h = HashPassword(password);
-            var _users = new List<SiteUserDb>();
-            SiteUserDb user = _users.FirstOrDefault(x => x.EmailAsLogin == emailAsLogin && x.Password == h);
 
-            if (user != null)
+            try
             {
-                var claims = new List<Claim>
+                //var _users = new List<SiteUserDb>();
+                SiteUserDb user = _db.SiteUsers.FirstOrDefault(x => x.EmailAsLogin == emailAsLogin);
+
+
+                //var w = _
+
+                if (user != null)
                 {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.EmailAsLogin),
-                    new Claim(ClaimsIdentity.DefaultRoleClaimType, user.SiteRoleId.ToString())
-                };
-                ClaimsIdentity claimsIdentity =
-                new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
-                    ClaimsIdentity.DefaultRoleClaimType);
-                return claimsIdentity;
+                    //проверяем пароль
+
+                    if (string.IsNullOrEmpty(user.Password) || string.IsNullOrEmpty(user.Salt))
+                        throw new Exception("Для пользователя " + emailAsLogin + " не найдены данные о пароле");
+
+                    var hash1 = user.Password;
+                    var hash2 = GetHashedPassword(passwordAsText, user.Salt);
+                    
+                    if (hash1 == hash2)
+                    {
+                        var claims = new List<Claim>
+                        {
+                            new Claim(ClaimsIdentity.DefaultNameClaimType, user.EmailAsLogin),
+                            new Claim(ClaimsIdentity.DefaultRoleClaimType, user.SiteRoleId.ToString())
+                        };
+                        ClaimsIdentity claimsIdentity =
+                        new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
+                            ClaimsIdentity.DefaultRoleClaimType);
+                        return claimsIdentity;
+                    }
+                }
+
+            }
+            catch(Exception ex) 
+            {
+                _logger.Error(ex);
             }
 
             // если пользователя не найдено
