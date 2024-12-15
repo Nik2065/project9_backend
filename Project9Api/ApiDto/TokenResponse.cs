@@ -9,5 +9,8 @@ namespace Project9Api.ApiDto
 
         [JsonPropertyName("login")]
         public string? Login { get; set; }
+
+        [JsonPropertyName("expires_in")]
+        public string ExpiresIn { get; set; }
     }
 }

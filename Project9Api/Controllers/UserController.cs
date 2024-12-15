@@ -47,9 +47,16 @@ namespace Project9Api.Controllers
                 //todo: проверки
                 _uLogic.CreateNewSiteUser(request.Email, request.Password, SiteRoleEnum.SimpleUser);
             }
+            catch(Project9CustomException ex)
+            {
+                var m = "Ошибка при создании пользователя:" + ex.Message;//TODO
+                result.IsError = true;
+                result.Message = m;
+                _logger.Error(m, ex);
+            }
             catch (Exception ex)
             { 
-                var m = "Ошибка при создании пользователя";//TODO
+                var m = "Ошибка при создании пользователя";
                 result.IsError = true;
                 result.Message = m;
                 _logger.Error(m, ex);
@@ -100,6 +107,7 @@ namespace Project9Api.Controllers
 
                 result.AccessToken = encodedJwt;
                 result.Login = identity.Name;
+                result.ExpiresIn = now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)).ToString("r");
 
             }
             catch (Exception ex)

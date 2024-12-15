@@ -21,7 +21,7 @@ namespace Logic
             //проверяем что пользователь уникален
             var item = _db.SiteUsers.FirstOrDefault(item => item.EmailAsLogin == userEmail.Trim());
             if (item != null)
-                throw new Exception("Пользователь с таким email уже зарегистирован");
+                throw new Project9CustomException("Пользователь с таким email уже зарегистирован");
 
             var hr = CreateHashedPassword(userPwd);
             var u = new SiteUserDb
@@ -90,7 +90,6 @@ namespace Logic
                 SiteUserDb user = _db.SiteUsers.FirstOrDefault(x => x.EmailAsLogin == emailAsLogin);
 
 
-                //var w = _
 
                 if (user != null)
                 {
@@ -107,7 +106,7 @@ namespace Logic
                         var claims = new List<Claim>
                         {
                             new Claim(ClaimsIdentity.DefaultNameClaimType, user.EmailAsLogin),
-                            new Claim(ClaimsIdentity.DefaultRoleClaimType, user.SiteRoleId.ToString())
+                            new Claim(ClaimsIdentity.DefaultRoleClaimType, user.SiteRoleId.ToString()),
                         };
                         ClaimsIdentity claimsIdentity =
                         new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
