@@ -36,5 +36,8 @@ namespace DataAccess.Entities
         [Column("gpu_id")]
         public int? GpuId { get; set; }
 
+        [Column("author_id")]
+        public int AuthorId { get; set; }
+
     }
 }

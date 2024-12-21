@@ -3,6 +3,8 @@ using Logic;
 using Microsoft.AspNetCore.Mvc;
 using Project9Api.ApiDto;
 using DataAccess;
+using Project9Api.Auth;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Project9Api.Controllers
 {
@@ -17,15 +19,16 @@ namespace Project9Api.Controllers
             //пока база фейковая, но потом надо передать строку подключения
             var conn = config["MainSettings:DbConnectionString"];
             var db = new DataContext(conn);
-            _logicForComputers = new Logic.LogicForComputers(db);
+            _logicForProducts = new LogicForProducts(db);
+            _userLogic = new UserLogic(db);
 
         }
 
 
         private readonly NLog.Logger _logger;
         private int _pageSize = 30;
-        private Logic.LogicForComputers _logicForComputers;
-
+        private LogicForProducts _logicForProducts;
+        private UserLogic _userLogic;
 
         [HttpGet]
         [Route("[action]")]
@@ -48,7 +51,7 @@ namespace Project9Api.Controllers
                 options.PerfomanceTo = pMax == (int?)null ? int.MaxValue : pMax;
 
 
-                var a = _logicForComputers.SearchProducts(options);
+                var a = _logicForProducts.SearchProducts(options);
                 //todo: удалить
                 var t = a.ToList();
                 var paged = ListToPages<ProductDto>.GetPage(a, _pageSize, (int)page);
@@ -70,20 +73,37 @@ namespace Project9Api.Controllers
         }
 
 
+        //
         [HttpPost]
+        [Authorize]
         [Route("[action]")]
-        public ActionResult Create()
+        public ActionResult<CreateProductResponse> CreateProduct(CreateProductRequest request)
         {
+            var result = new CreateProductResponse();
+
             try
             {
+                var aid = _userLogic.GetClaimData(User.Claims).AccountId;
+
+                var p = new DataAccess.Entities.ProductDb();
+                p.CurrentPrice = request.Cost;
+                p.Created = DateTime.Now;
+                p.Description = request.Description;
+                p.ProductTitle = request.Title;
+                p.AuthorId = aid;
+
+                _logicForProducts.AddProductToDb(p);
 
             }
             catch (Exception ex)
             {
-
+                result.IsError = true;
+                result.Message = ex.Message;
+                _logger.Error(ex);
             }
 
-            return Ok(new { });
+
+            return Ok(result);
         }
 
 

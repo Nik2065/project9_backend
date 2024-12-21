@@ -3,6 +3,7 @@ using Logic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Project9Api.ApiDto;
+using Project9Api.Auth;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

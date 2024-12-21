@@ -5,9 +5,9 @@ using System.Collections;
 
 namespace Logic
 {
-    public class LogicForComputers
+    public class LogicForProducts
     {
-        public LogicForComputers(DataContext db)
+        public LogicForProducts(DataContext db)
         {
             //todo: передавать строку подключения из настроек
             _db = db;
@@ -70,9 +70,9 @@ namespace Logic
         }
 
 
-        public void AddComputerToDb(ComputerDb computer)
+        public void AddProductToDb(ProductDb product)
         {
-            _db.ComputersDb.Add(computer);
+            _db.Products.Add(product);
             _db.SaveChanges();
         }
 

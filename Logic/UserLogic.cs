@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Principal;
 
 namespace Logic
 {
@@ -81,7 +82,7 @@ namespace Logic
         }
 
 
-        public ClaimsIdentity GetIdentity(string emailAsLogin, string passwordAsText)
+        public ClaimsIdentity? GetIdentity(string emailAsLogin, string passwordAsText)
         {
 
             try
@@ -107,6 +108,7 @@ namespace Logic
                         {
                             new Claim(ClaimsIdentity.DefaultNameClaimType, user.EmailAsLogin),
                             new Claim(ClaimsIdentity.DefaultRoleClaimType, user.SiteRoleId.ToString()),
+                            new Claim("accountId",user.Id.ToString())
                         };
                         ClaimsIdentity claimsIdentity =
                         new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
@@ -126,5 +128,35 @@ namespace Logic
         }
 
 
+        public ClaimData GetClaimData(IEnumerable<System.Security.Claims.Claim> claims)
+        {
+            //var name = User.Claims.FirstOrDefault(x => x.Type.Contains("name"))?.Value;
+            //var role = User.Claims.FirstOrDefault(x => x.Type.Contains("role"))?.Value;
+            //var accountId = User.Claims.FirstOrDefault(x => x.Type.Contains("accountId"))?.Value;
+
+            var claimData = new ClaimData();
+
+            claimData.Email = claims.FirstOrDefault(x => x.Type.Contains("name"))?.Value;
+            claimData.Role = claims.FirstOrDefault(x => x.Type.Contains("role"))?.Value;
+            var aid = claims.FirstOrDefault(x => x.Type.Contains("accountId"))?.Value;
+            var canParse = int.TryParse(aid, out int id);
+            if (!canParse)
+                throw new Exception("Не удалось распознать идентификатор пользователя");
+
+            claimData.AccountId = id;
+
+            return claimData;
+        }
+
+
+    }
+
+    public class ClaimData
+    {
+        public string? Email { get; set; }
+
+        public string? Role { get; set; }
+
+        public int AccountId { get; set; }
     }
 }

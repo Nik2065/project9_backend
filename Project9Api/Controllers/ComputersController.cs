@@ -23,7 +23,7 @@ namespace Project9Api.Controllers
 
             var db = new DataContext();
 
-            _logicForComputers = new Logic.LogicForComputers(db);
+            _logicForComputers = new Logic.LogicForProducts(db);
         }
 
         //private void 
@@ -31,7 +31,7 @@ namespace Project9Api.Controllers
 
 
 
-        private Logic.LogicForComputers _logicForComputers;
+        private Logic.LogicForProducts _logicForComputers;
 
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Project9Api.Controllers
 
                 //todo: заполнить данными
 
-                _logicForComputers.AddComputerToDb(c);
+                //_logicForComputers.AddComputerToDb(c);
 
 
             }
