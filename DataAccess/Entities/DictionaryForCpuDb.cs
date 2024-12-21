@@ -8,13 +8,21 @@ namespace DataAccess.Entities
     public class DictionaryForCpuDb
     {
         [Key]
+        [Column("id")]
         public int Id {  get; set; }
+
+        [Column("name")]
         public string Name { get; set; }
 
-        public decimal PerformancePoints {  get; set; }
+        [Column("performance_points")]
+        public int PerformancePoints {  get; set; }
 
+
+        [Column("performance_class")]
         public int PerformanceClass {  get; set; }
 
+
+        [Column("inserted")]
         public DateTime Inserted { get; set; }
         //
         //

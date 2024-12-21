@@ -46,12 +46,13 @@ namespace Project9Api.Controllers
         public SearchComputersResponse SearchComputers(
             [FromQuery] int? pMin, [FromQuery] int? pMax, [FromQuery] int? elementsInRow, int? page)
         {
+            var result = new SearchComputersResponse();
 
-            var pageSize = elementsInRow * 8;//пока берем такое значение
+
+            /*var pageSize = elementsInRow * 8;//пока берем такое значение
 
             //var db = new DataContext();
             //var list = db.DictionaryForCpuDb.ToList();
-            var result = new SearchComputersResponse();
 
             if (page == null)
                 page = 1;
@@ -64,7 +65,7 @@ namespace Project9Api.Controllers
 
                 var a = _logicForComputers.SearchComputers(options);
 
-                var paged = ListToPages<ComputerDto>.GetPage(a, _pageSize, (int)page);
+                var paged = ListToPages<ProductDto>.GetPage(a, _pageSize, (int)page);
 
                 result.Computers = paged.PageItems.ToList();
 
@@ -81,7 +82,7 @@ namespace Project9Api.Controllers
                 result.Message = ex.Message;
                 _logger.Error(ex);
             }
-
+            */
             return result;
         }
 
@@ -89,9 +90,9 @@ namespace Project9Api.Controllers
         [Route("[action]")]
         //Получаем список продуков
         [HttpGet]
-        public IEnumerable<ComputerDto> GetProductDetails(int productId)
+        public IEnumerable<ProductDto> GetProductDetails(int productId)
         {
-            var result = new List<ComputerDto>();
+            var result = new List<ProductDto>();
             try
             {
 
@@ -108,9 +109,9 @@ namespace Project9Api.Controllers
         [Route("[action]")]
         //Получаем список продуков
         [HttpGet]
-        public IEnumerable<ComputerDto> GetProductFullImages(int productId)
+        public IEnumerable<ProductDto> GetProductFullImages(int productId)
         {
-            var result = new List<ComputerDto>();
+            var result = new List<ProductDto>();
             try
             {
 

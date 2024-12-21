@@ -1,19 +1,20 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Project9Api;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
+var conf = builder.Configuration;
+var siteUrl = conf["MainSettings:SiteUrl"];
+
 builder.Services.AddCors(options =>
 {
+
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("*");
+                          policy.WithOrigins(siteUrl);
                           policy.WithHeaders("*");
                           policy.WithMethods("*");
                       });

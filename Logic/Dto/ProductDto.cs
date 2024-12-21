@@ -1,8 +1,8 @@
 ﻿namespace Logic.Dto
 {
-    public class ComputerDto
+    public class ProductDto
     {
-        public ComputerDto()
+        public ProductDto()
         {
             ProductsTambprints = new List<ProductImageDto>();
         }

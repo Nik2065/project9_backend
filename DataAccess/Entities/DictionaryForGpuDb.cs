@@ -1,31 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess.Entities
 {
+
     [Table("dictionary_for_gpu")]
     public class DictionaryForGpuDb
     {
         [Key]
+        [Column("id")]
         public int Id {  get; set; }
+
+        [Column("name")]
         public string Name { get; set; }
 
-        public decimal PerformancePoints {  get; set; }
+        [Column("performance_points")]
+        public int PerformancePoints {  get; set; }
 
+
+        [Column("performance_class")]
         public int PerformanceClass {  get; set; }
 
+
+        [Column("inserted")]
         public DateTime Inserted { get; set; }
         //
         //
         //добавить:
         //проиводитель/Дата релиза
         //
-
 
     }
 }

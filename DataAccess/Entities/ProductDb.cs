@@ -30,5 +30,11 @@ namespace DataAccess.Entities
         [Column("category_id")]
         public DateTime CategoryId { get; set; }
 
+        [Column("cpu_id")]
+        public int CpuId { get; set; }
+
+        [Column("gpu_id")]
+        public int? GpuId { get; set; }
+
     }
 }

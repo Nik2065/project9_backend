@@ -22,7 +22,7 @@ namespace Logic
         
 
         //todo: учитывать options
-        public IQueryable<ComputerDto> SearchComputers(SearchOptions options)
+        public IQueryable<ProductDto> SearchProducts(SearchOptions options)
         {
             //var result = new List<ComputerDto>();
 
@@ -43,18 +43,18 @@ namespace Logic
             }
 
 
-            var gpuList = _db.DictionaryForGpuDb;
+            var gpuList = _db.DictionaryForGpuDb.AsQueryable();
 
             var tmp2 = cpuList.Count();
 
-            var a = (from computer in _db.ComputersDb
-                     join cpu in cpuList on computer.CpuId equals cpu.Id 
-                     join gpu in gpuList on computer.CpuId equals gpu.Id into tempGpu
+            var a = (from products in _db.Products
+                     join cpu in cpuList on products.CpuId equals cpu.Id 
+                     join gpu in gpuList on products.CpuId equals gpu.Id into tempGpu
                                                                         from gpu2 in tempGpu.DefaultIfEmpty()
-                     select new ComputerDto
+                     select new ProductDto
                      {
-                         Id = computer.Id,
-                         Name = computer.Name,
+                         Id = products.Id,
+                         Name = products.ProductTitle,
                          CpuPerfomanceClass = cpu.PerformanceClass,
                          CpuName = cpu.Name,
                          CpuPerfomancePoints = cpu.PerformancePoints,

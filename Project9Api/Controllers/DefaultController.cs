@@ -2,11 +2,14 @@
 
 namespace Project9Api.Controllers
 {
+    [Route("[controller]")]
     public class DefaultController : Controller
     {
+        [HttpGet]
+        [Route("/")]
         public string Index()
         {
-            return "ponaitno-api";
+            return "poniatno-api";
         }
     }
 }
