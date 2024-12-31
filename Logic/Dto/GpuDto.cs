@@ -8,6 +8,8 @@ namespace Logic.Dto
 {
     public class GpuDto
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
         public int PerformancePoints { get; set; }
     }

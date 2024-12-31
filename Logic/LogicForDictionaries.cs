@@ -18,7 +18,7 @@ namespace Logic
             var list = _db.DictionaryForCpuDb.ToList();
 
             var result = from item in list
-                         select new CpuDto { Name = item.Name, PerformancePoints = item.PerformancePoints };
+                         select new CpuDto { Id=item.Id, Name = item.Name, PerformancePoints = item.PerformancePoints };
 
             return result.ToList();
         }
@@ -29,7 +29,7 @@ namespace Logic
             var list = _db.DictionaryForGpuDb.ToList();
 
             var result = from item in list
-                         select new GpuDto { Name = item.Name, PerformancePoints = item.PerformancePoints };
+                         select new GpuDto { Id = item.Id, Name = item.Name, PerformancePoints = item.PerformancePoints };
 
             return result.ToList();
         }

@@ -27,9 +27,6 @@ namespace DataAccess.Entities
         public DateTime Created { get; set; }
 
         
-        [Column("category_id")]
-        public DateTime CategoryId { get; set; }
-
         [Column("cpu_id")]
         public int CpuId { get; set; }
 
@@ -38,6 +35,10 @@ namespace DataAccess.Entities
 
         [Column("author_id")]
         public int AuthorId { get; set; }
+
+        [Column("category_id")]
+        public int CategoryId { get; set; }
+
 
     }
 }

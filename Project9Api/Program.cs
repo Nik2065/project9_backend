@@ -59,9 +59,14 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseSwagger();
+    //app.UseSwaggerUI();
 }
+
+//todo: потом убрать из прода
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthentication();

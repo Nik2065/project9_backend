@@ -11,6 +11,13 @@ namespace Project9Api.ApiDto
         public string Description { get; set; }
 
         [JsonProperty("cost")]
-        public int Cost { get; set; }
+        public decimal Cost { get; set; }
+
+        //[JsonProperty("cpu_id")]
+        public int CpuId { get; set; }
+
+
+        //[JsonProperty("gpu_id")]
+        public int? GpuId { get; set; }
     }
 }
